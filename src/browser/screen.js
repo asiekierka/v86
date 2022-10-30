@@ -30,7 +30,8 @@ function ScreenAdapter(screen_container, bus)
         /** @type {number} */
         scale_y = 1,
 
-        base_scale = 1,
+        base_scale_x = 1,
+        base_scale_y = 1,
 
         changed_rows,
 
@@ -349,14 +350,16 @@ function ScreenAdapter(screen_container, bus)
         graphic_screen.height = height;
 
         // add some scaling to tiny resolutions
-        if(width <= 640 && width * 2 < window.innerWidth && width * 2 < window.innerHeight)
+        /* if(width <= 640 && width * 2 < window.innerWidth && width * 2 < window.innerHeight)
         {
             base_scale = 2;
         }
         else
         {
             base_scale = 1;
-        }
+        } */
+        if(width <= 320) { base_scale_x = 2; } else { base_scale_x = 1; }
+        if(height <= 240) { base_scale_y = 2; } else { base_scale_y = 1; }
 
         update_scale_graphic();
     };
@@ -378,7 +381,7 @@ function ScreenAdapter(screen_container, bus)
 
     function update_scale_graphic()
     {
-        elem_set_scale(graphic_screen, scale_x * base_scale, scale_y * base_scale, false);
+        elem_set_scale(graphic_screen, scale_x * base_scale_x, scale_y * base_scale_y, false);
     }
 
     function elem_set_scale(elem, scale_x, scale_y, use_scale)
@@ -426,14 +429,8 @@ function ScreenAdapter(screen_container, bus)
             }
         }
 
-        if(scale_x !== 1)
-        {
-            elem.style.width = rectangle.width * scale_x + "px";
-        }
-        if(scale_y !== 1)
-        {
-            elem.style.height = rectangle.height * scale_y + "px";
-        }
+        elem.style.width = rectangle.width * scale_x + "px";
+        elem.style.height = rectangle.height * scale_y + "px";
     }
 
     this.update_cursor_scanline = function(start, end)
